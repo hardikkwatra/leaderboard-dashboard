@@ -1,0 +1,456 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2025-03-12T15:34:38.653Z",
+  "badges": [
+    {
+      "id": 1,
+      "name": "Trading Completed",
+      "description": "Completed outstanding consistency in the protocol",
+      "type": "trading",
+      "color": "blue",
+      "icon": "📈",
+      "earnedDate": "2024-03-26T12:11:50.138Z",
+      "svgPath": "/badges/badge-1.svg",
+      "rarity": "common",
+      "requirements": {
+        "metric": "consistency",
+        "threshold": 700
+      }
+    },
+    {
+      "id": 2,
+      "name": "Trading Dominated",
+      "description": "Dominated outstanding volume in the protocol",
+      "type": "trading",
+      "color": "purple",
+      "icon": "🔄",
+      "earnedDate": "2025-01-24T21:28:38.490Z",
+      "svgPath": "/badges/badge-2.svg",
+      "rarity": "common",
+      "requirements": {
+        "metric": "volume",
+        "threshold": 478
+      }
+    },
+    {
+      "id": 3,
+      "name": "Trading Completed",
+      "description": "Completed outstanding profit in the protocol",
+      "type": "trading",
+      "color": "green",
+      "icon": "💹",
+      "earnedDate": "2024-11-09T20:26:37.846Z",
+      "svgPath": "/badges/badge-3.svg",
+      "rarity": "common",
+      "requirements": {
+        "metric": "profit",
+        "threshold": 990
+      }
+    },
+    {
+      "id": 4,
+      "name": "Trading Completed",
+      "description": "Completed outstanding profit in the protocol",
+      "type": "trading",
+      "color": "red",
+      "icon": "💹",
+      "earnedDate": "2024-08-25T23:34:43.885Z",
+      "svgPath": "/badges/badge-4.svg",
+      "rarity": "common",
+      "requirements": {
+        "metric": "profit",
+        "threshold": 807
+      }
+    },
+    {
+      "id": 5,
+      "name": "Trading Completed",
+      "description": "Completed outstanding profit in the protocol",
+      "type": "trading",
+      "color": "yellow",
+      "icon": "💹",
+      "earnedDate": "2024-10-20T01:10:15.745Z",
+      "svgPath": "/badges/badge-5.svg",
+      "rarity": "legendary",
+      "requirements": {
+        "metric": "profit",
+        "threshold": 488
+      }
+    },
+    {
+      "id": 6,
+      "name": "Trading Achieved",
+      "description": "Achieved outstanding volume in the protocol",
+      "type": "trading",
+      "color": "pink",
+      "icon": "💹",
+      "earnedDate": "2024-09-19T20:59:06.238Z",
+      "svgPath": "/badges/badge-6.svg",
+      "rarity": "common",
+      "requirements": {
+        "metric": "volume",
+        "threshold": 185
+      }
+    },
+    {
+      "id": 7,
+      "name": "Social Led",
+      "description": "Led outstanding followers in the protocol",
+      "type": "social",
+      "color": "blue",
+      "icon": "🤝",
+      "earnedDate": "2024-07-10T04:13:50.315Z",
+      "svgPath": "/badges/badge-7.svg",
+      "rarity": "rare",
+      "requirements": {
+        "metric": "followers",
+        "threshold": 565
+      }
+    },
+    {
+      "id": 8,
+      "name": "Social Influenced",
+      "description": "Influenced outstanding impact in the protocol",
+      "type": "social",
+      "color": "purple",
+      "icon": "💬",
+      "earnedDate": "2024-11-10T22:51:16.729Z",
+      "svgPath": "/badges/badge-8.svg",
+      "rarity": "common",
+      "requirements": {
+        "metric": "impact",
+        "threshold": 467
+      }
+    },
+    {
+      "id": 9,
+      "name": "Social Influenced",
+      "description": "Influenced outstanding interactions in the protocol",
+      "type": "social",
+      "color": "green",
+      "icon": "💬",
+      "earnedDate": "2024-05-23T09:15:32.453Z",
+      "svgPath": "/badges/badge-9.svg",
+      "rarity": "common",
+      "requirements": {
+        "metric": "interactions",
+        "threshold": 631
+      }
+    },
+    {
+      "id": 10,
+      "name": "Social Influenced",
+      "description": "Influenced outstanding reach in the protocol",
+      "type": "social",
+      "color": "red",
+      "icon": "💬",
+      "earnedDate": "2025-02-01T09:08:52.048Z",
+      "svgPath": "/badges/badge-10.svg",
+      "rarity": "legendary",
+      "requirements": {
+        "metric": "reach",
+        "threshold": 1054
+      }
+    },
+    {
+      "id": 11,
+      "name": "Social Connected",
+      "description": "Connected outstanding reach in the protocol",
+      "type": "social",
+      "color": "yellow",
+      "icon": "💬",
+      "earnedDate": "2024-10-05T01:04:00.171Z",
+      "svgPath": "/badges/badge-11.svg",
+      "rarity": "common",
+      "requirements": {
+        "metric": "reach",
+        "threshold": 609
+      }
+    },
+    {
+      "id": 12,
+      "name": "Social Engaged",
+      "description": "Engaged outstanding followers in the protocol",
+      "type": "social",
+      "color": "pink",
+      "icon": "🤝",
+      "earnedDate": "2024-08-30T08:11:24.943Z",
+      "svgPath": "/badges/badge-12.svg",
+      "rarity": "rare",
+      "requirements": {
+        "metric": "followers",
+        "threshold": 828
+      }
+    },
+    {
+      "id": 13,
+      "name": "Governance Participated",
+      "description": "Participated outstanding proposals in the protocol",
+      "type": "governance",
+      "color": "blue",
+      "icon": "🏛️",
+      "earnedDate": "2024-10-21T13:36:25.008Z",
+      "svgPath": "/badges/badge-13.svg",
+      "rarity": "common",
+      "requirements": {
+        "metric": "proposals",
+        "threshold": 1088
+      }
+    },
+    {
+      "id": 14,
+      "name": "Governance Participated",
+      "description": "Participated outstanding votes in the protocol",
+      "type": "governance",
+      "color": "purple",
+      "icon": "🏛️",
+      "earnedDate": "2024-08-15T07:28:11.158Z",
+      "svgPath": "/badges/badge-14.svg",
+      "rarity": "rare",
+      "requirements": {
+        "metric": "votes",
+        "threshold": 909
+      }
+    },
+    {
+      "id": 15,
+      "name": "Governance Participated",
+      "description": "Participated outstanding proposals in the protocol",
+      "type": "governance",
+      "color": "green",
+      "icon": "⚖️",
+      "earnedDate": "2024-05-14T15:48:18.281Z",
+      "svgPath": "/badges/badge-15.svg",
+      "rarity": "common",
+      "requirements": {
+        "metric": "proposals",
+        "threshold": 674
+      }
+    },
+    {
+      "id": 16,
+      "name": "Governance Proposed",
+      "description": "Proposed outstanding initiatives in the protocol",
+      "type": "governance",
+      "color": "red",
+      "icon": "⚖️",
+      "earnedDate": "2024-05-05T09:49:16.144Z",
+      "svgPath": "/badges/badge-16.svg",
+      "rarity": "common",
+      "requirements": {
+        "metric": "initiatives",
+        "threshold": 646
+      }
+    },
+    {
+      "id": 17,
+      "name": "Governance Voted",
+      "description": "Voted outstanding initiatives in the protocol",
+      "type": "governance",
+      "color": "yellow",
+      "icon": "🏛️",
+      "earnedDate": "2024-06-06T16:53:18.671Z",
+      "svgPath": "/badges/badge-17.svg",
+      "rarity": "rare",
+      "requirements": {
+        "metric": "initiatives",
+        "threshold": 920
+      }
+    },
+    {
+      "id": 18,
+      "name": "Governance Championed",
+      "description": "Championed outstanding votes in the protocol",
+      "type": "governance",
+      "color": "pink",
+      "icon": "📜",
+      "earnedDate": "2024-10-31T12:26:46.920Z",
+      "svgPath": "/badges/badge-18.svg",
+      "rarity": "rare",
+      "requirements": {
+        "metric": "votes",
+        "threshold": 750
+      }
+    },
+    {
+      "id": 19,
+      "name": "Technical Implemented",
+      "description": "Implemented outstanding solutions in the protocol",
+      "type": "technical",
+      "color": "blue",
+      "icon": "⚙️",
+      "earnedDate": "2024-11-18T00:09:52.749Z",
+      "svgPath": "/badges/badge-19.svg",
+      "rarity": "common",
+      "requirements": {
+        "metric": "solutions",
+        "threshold": 1094
+      }
+    },
+    {
+      "id": 20,
+      "name": "Technical Implemented",
+      "description": "Implemented outstanding solutions in the protocol",
+      "type": "technical",
+      "color": "purple",
+      "icon": "⚙️",
+      "earnedDate": "2024-08-24T06:53:51.569Z",
+      "svgPath": "/badges/badge-20.svg",
+      "rarity": "rare",
+      "requirements": {
+        "metric": "solutions",
+        "threshold": 692
+      }
+    },
+    {
+      "id": 21,
+      "name": "Technical Implemented",
+      "description": "Implemented outstanding systems in the protocol",
+      "type": "technical",
+      "color": "green",
+      "icon": "🔨",
+      "earnedDate": "2024-08-06T10:25:23.076Z",
+      "svgPath": "/badges/badge-21.svg",
+      "rarity": "rare",
+      "requirements": {
+        "metric": "systems",
+        "threshold": 143
+      }
+    },
+    {
+      "id": 22,
+      "name": "Technical Optimized",
+      "description": "Optimized outstanding improvements in the protocol",
+      "type": "technical",
+      "color": "red",
+      "icon": "💻",
+      "earnedDate": "2024-04-07T13:05:51.751Z",
+      "svgPath": "/badges/badge-22.svg",
+      "rarity": "common",
+      "requirements": {
+        "metric": "improvements",
+        "threshold": 144
+      }
+    },
+    {
+      "id": 23,
+      "name": "Technical Optimized",
+      "description": "Optimized outstanding systems in the protocol",
+      "type": "technical",
+      "color": "yellow",
+      "icon": "⚙️",
+      "earnedDate": "2024-08-20T21:20:13.222Z",
+      "svgPath": "/badges/badge-23.svg",
+      "rarity": "legendary",
+      "requirements": {
+        "metric": "systems",
+        "threshold": 1062
+      }
+    },
+    {
+      "id": 24,
+      "name": "Technical Implemented",
+      "description": "Implemented outstanding code in the protocol",
+      "type": "technical",
+      "color": "pink",
+      "icon": "⚙️",
+      "earnedDate": "2025-02-19T17:08:37.848Z",
+      "svgPath": "/badges/badge-24.svg",
+      "rarity": "common",
+      "requirements": {
+        "metric": "code",
+        "threshold": 122
+      }
+    },
+    {
+      "id": 25,
+      "name": "Community Supported",
+      "description": "Supported outstanding help in the protocol",
+      "type": "community",
+      "color": "blue",
+      "icon": "🎯",
+      "earnedDate": "2024-11-06T01:53:33.989Z",
+      "svgPath": "/badges/badge-25.svg",
+      "rarity": "legendary",
+      "requirements": {
+        "metric": "help",
+        "threshold": 139
+      }
+    },
+    {
+      "id": 26,
+      "name": "Community Supported",
+      "description": "Supported outstanding success in the protocol",
+      "type": "community",
+      "color": "purple",
+      "icon": "👥",
+      "earnedDate": "2025-02-06T03:24:35.052Z",
+      "svgPath": "/badges/badge-26.svg",
+      "rarity": "common",
+      "requirements": {
+        "metric": "success",
+        "threshold": 807
+      }
+    },
+    {
+      "id": 27,
+      "name": "Community Grew",
+      "description": "Grew outstanding growth in the protocol",
+      "type": "community",
+      "color": "green",
+      "icon": "🌟",
+      "earnedDate": "2024-03-25T16:10:38.840Z",
+      "svgPath": "/badges/badge-27.svg",
+      "rarity": "common",
+      "requirements": {
+        "metric": "growth",
+        "threshold": 629
+      }
+    },
+    {
+      "id": 28,
+      "name": "Community Empowered",
+      "description": "Empowered outstanding growth in the protocol",
+      "type": "community",
+      "color": "red",
+      "icon": "👥",
+      "earnedDate": "2024-03-28T20:36:40.318Z",
+      "svgPath": "/badges/badge-28.svg",
+      "rarity": "common",
+      "requirements": {
+        "metric": "growth",
+        "threshold": 190
+      }
+    },
+    {
+      "id": 29,
+      "name": "Community Grew",
+      "description": "Grew outstanding success in the protocol",
+      "type": "community",
+      "color": "yellow",
+      "icon": "🤲",
+      "earnedDate": "2024-10-22T06:03:15.614Z",
+      "svgPath": "/badges/badge-29.svg",
+      "rarity": "common",
+      "requirements": {
+        "metric": "success",
+        "threshold": 769
+      }
+    },
+    {
+      "id": 30,
+      "name": "Community Empowered",
+      "description": "Empowered outstanding growth in the protocol",
+      "type": "community",
+      "color": "pink",
+      "icon": "🎯",
+      "earnedDate": "2024-04-04T10:10:18.163Z",
+      "svgPath": "/badges/badge-30.svg",
+      "rarity": "common",
+      "requirements": {
+        "metric": "growth",
+        "threshold": 797
+      }
+    }
+  ]
+}
