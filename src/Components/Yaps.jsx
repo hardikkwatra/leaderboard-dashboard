@@ -51,6 +51,245 @@ export default function ClusterDashboard() {
   const notificationRef = useRef(null)
   const bellRef = useRef(null)
   const [preparingDownload, setPreparingDownload] = useState(false)
+  const [networkNodes, setNetworkNodes] = useState([])
+  const [networkLinks, setNetworkLinks] = useState([])
+  const networkCanvasRef = useRef(null)
+
+  // Generate network data
+  useEffect(() => {
+    // Generate random nodes
+    const nodes = []
+    const centerX = 200
+    const centerY = 200
+    const radius = 180
+
+    // Create center node (user)
+    nodes.push({
+      id: "user",
+      x: centerX,
+      y: centerY,
+      radius: 20,
+      color: "#4ade80", // Green for user
+      image: null,
+    })
+
+    // Create surrounding nodes with different sizes
+    for (let i = 0; i < 40; i++) {
+      const angle = (Math.PI * 2 * i) / 40
+      const distance = radius * (0.5 + Math.random() * 0.5)
+      const x = centerX + Math.cos(angle) * distance
+      const y = centerY + Math.sin(angle) * distance
+
+      // Vary node sizes more dramatically
+      const nodeSize = 6 + Math.random() * 14
+
+      // Add some colored nodes (like in the image)
+      const colors = ["#FF5555", "#55AAFF", "#FFAA55", "#55FF55", "#AA55FF", "#FFFF55"]
+      const color = Math.random() > 0.7 ? colors[Math.floor(Math.random() * colors.length)] : "#FFFFFF"
+
+      nodes.push({
+        id: `node-${i}`,
+        x,
+        y,
+        radius: nodeSize,
+        color,
+        image: null,
+      })
+    }
+
+    // Generate links between nodes - more connections to match the dense network in the image
+    const links = []
+
+    // Connect center node to many others
+    for (let i = 1; i < nodes.length; i++) {
+      if (Math.random() > 0.2) {
+        // 80% chance of connection to center
+        links.push({
+          source: 0,
+          target: i,
+          strength: 0.3 + Math.random() * 0.7,
+        })
+      }
+    }
+
+    // Connect nodes to each other - more connections
+    for (let i = 1; i < nodes.length; i++) {
+      for (let j = i + 1; j < nodes.length; j++) {
+        if (Math.random() > 0.75) {
+          // 25% chance of connection between nodes
+          links.push({
+            source: i,
+            target: j,
+            strength: 0.1 + Math.random() * 0.4,
+          })
+        }
+      }
+    }
+
+    setNetworkNodes(nodes)
+    setNetworkLinks(links)
+  }, [])
+
+  // Draw network visualization
+  useEffect(() => {
+    if (!networkCanvasRef.current || networkNodes.length === 0) return
+
+    const canvas = networkCanvasRef.current
+    const ctx = canvas.getContext("2d")
+    const dpr = window.devicePixelRatio || 1
+
+    // Set canvas size with device pixel ratio for sharp rendering
+    canvas.width = canvas.offsetWidth * dpr
+    canvas.height = canvas.offsetHeight * dpr
+    ctx.scale(dpr, dpr)
+
+    // Clear canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
+
+    // Draw links with glow effect to match the image
+    networkLinks.forEach((link) => {
+      const source = networkNodes[link.source]
+      const target = networkNodes[link.target]
+
+      // Create gradient for links
+      const gradient = ctx.createLinearGradient(source.x, source.y, target.x, target.y)
+      gradient.addColorStop(0, `rgba(74, 222, 128, ${link.strength * 0.8})`)
+      gradient.addColorStop(1, `rgba(20, 184, 166, ${link.strength * 0.8})`)
+
+      // Draw glowing line
+      ctx.beginPath()
+      ctx.moveTo(source.x, source.y)
+      ctx.lineTo(target.x, target.y)
+      ctx.strokeStyle = gradient
+      ctx.lineWidth = link.strength * 2.5
+      ctx.globalAlpha = 0.8
+      ctx.stroke()
+
+      // Add glow effect
+      ctx.beginPath()
+      ctx.moveTo(source.x, source.y)
+      ctx.lineTo(target.x, target.y)
+      ctx.strokeStyle = gradient
+      ctx.lineWidth = link.strength * 5
+      ctx.globalAlpha = 0.2
+      ctx.stroke()
+
+      ctx.globalAlpha = 1.0
+    })
+
+    // Draw nodes
+    networkNodes.forEach((node) => {
+      // Draw glow effect for nodes
+      ctx.beginPath()
+      ctx.arc(node.x, node.y, node.radius * 1.5, 0, Math.PI * 2)
+      ctx.fillStyle = `rgba(${node.id === "user" ? "74, 222, 128" : "255, 255, 255"}, 0.2)`
+      ctx.fill()
+
+      // Draw node
+      ctx.beginPath()
+      ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2)
+      ctx.fillStyle = node.color
+      ctx.fill()
+
+      // Add border to nodes
+      ctx.beginPath()
+      ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2)
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.5)"
+      ctx.lineWidth = 1.5
+      ctx.stroke()
+
+      if (node.image) {
+        // Draw image if available
+        const img = new Image()
+        img.src = node.image
+        img.crossOrigin = "anonymous"
+        img.onload = () => {
+          ctx.save()
+          ctx.beginPath()
+          ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2)
+          ctx.clip()
+          ctx.drawImage(img, node.x - node.radius, node.y - node.radius, node.radius * 2, node.radius * 2)
+          ctx.restore()
+        }
+      }
+    })
+
+    // Animation frame
+    const animate = () => {
+      // Simple animation - slightly move nodes
+      networkNodes.forEach((node) => {
+        if (node.id !== "user") {
+          // Don't move the center node
+          node.x += (Math.random() - 0.5) * 0.5
+          node.y += (Math.random() - 0.5) * 0.5
+        }
+      })
+
+      // Redraw
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
+
+      // Draw links with glow effect
+      networkLinks.forEach((link) => {
+        const source = networkNodes[link.source]
+        const target = networkNodes[link.target]
+
+        // Create gradient for links
+        const gradient = ctx.createLinearGradient(source.x, source.y, target.x, target.y)
+        gradient.addColorStop(0, `rgba(74, 222, 128, ${link.strength * 0.8})`)
+        gradient.addColorStop(1, `rgba(20, 184, 166, ${link.strength * 0.8})`)
+
+        // Draw glowing line
+        ctx.beginPath()
+        ctx.moveTo(source.x, source.y)
+        ctx.lineTo(target.x, target.y)
+        ctx.strokeStyle = gradient
+        ctx.lineWidth = link.strength * 2.5
+        ctx.globalAlpha = 0.8
+        ctx.stroke()
+
+        // Add glow effect
+        ctx.beginPath()
+        ctx.moveTo(source.x, source.y)
+        ctx.lineTo(target.x, target.y)
+        ctx.strokeStyle = gradient
+        ctx.lineWidth = link.strength * 5
+        ctx.globalAlpha = 0.2
+        ctx.stroke()
+
+        ctx.globalAlpha = 1.0
+      })
+
+      // Draw nodes
+      networkNodes.forEach((node) => {
+        // Draw glow effect for nodes
+        ctx.beginPath()
+        ctx.arc(node.x, node.y, node.radius * 1.5, 0, Math.PI * 2)
+        ctx.fillStyle = `rgba(${node.id === "user" ? "74, 222, 128" : "255, 255, 255"}, 0.2)`
+        ctx.fill()
+
+        // Draw node
+        ctx.beginPath()
+        ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2)
+        ctx.fillStyle = node.color
+        ctx.fill()
+
+        // Add border to nodes
+        ctx.beginPath()
+        ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2)
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.5)"
+        ctx.lineWidth = 1.5
+        ctx.stroke()
+      })
+
+      requestAnimationFrame(animate)
+    }
+
+    const animationId = requestAnimationFrame(animate)
+
+    return () => {
+      cancelAnimationFrame(animationId)
+    }
+  }, [networkNodes, networkLinks])
 
   // Close notifications when clicking outside
   useEffect(() => {
@@ -376,7 +615,17 @@ export default function ClusterDashboard() {
     walletScore: 523,
     totalScore: 1650,
     percentage: "6.3%",
+    smartFollowers: 180,
+    topPercentage: "8.7%",
+    lastUpdated: new Date().toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" }),
+    category: "Emerging CT",
   }
+
+  // Generate top smart followers
+  const topSmartFollowers = Array.from({ length: 20 }, (_, i) => ({
+    id: i,
+    avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=follower-${i}`,
+  }))
 
   // Function to handle sorting
   const handleSort = (column) => {
@@ -894,12 +1143,12 @@ export default function ClusterDashboard() {
           </div>
         )}
 
-        {/* Score Card Modal */}
+        {/* Score Card Modal - Redesigned to match Kaito's style with requested changes */}
         {showScoreCard && (
-          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm backdrop-filter flex items-center justify-center z-50">
-            <div className="bg-black/80 backdrop-blur-md backdrop-filter rounded-lg p-6 max-w-xl w-full border border-purple-500/30">
+          <div className="fixed inset-0 bg-black/80 backdrop-blur-sm backdrop-filter flex items-center justify-center z-50">
+            <div className="bg-[#0A0A0F] backdrop-blur-md backdrop-filter rounded-xl p-6 max-w-4xl w-full border border-purple-500/20">
               <div className="flex justify-between items-center mb-4">
-                <h3 className="text-xl font-bold">Your Score Card</h3>
+                <h3 className="text-2xl font-bold">Your Score Card</h3>
                 <button
                   onClick={() => setShowScoreCard(false)}
                   className="text-gray-400 hover:text-white transition-colors"
@@ -910,173 +1159,139 @@ export default function ClusterDashboard() {
 
               <div
                 ref={scoreCardRef}
-                className="bg-gradient-to-br from-black/80 to-black/80 rounded-lg p-8 mb-6 border border-purple-500/30 relative overflow-hidden backdrop-blur-md backdrop-filter"
-                style={{
-                  background: preparingDownload
-                    ? "linear-gradient(135deg, #010101 0%, #121212 100%)"
-                    : "linear-gradient(135deg, rgba(0, 0, 0, 0.9) 0%, rgba(10, 10, 20, 0.9) 100%)",
-                  backgroundImage: !preparingDownload
-                    ? "radial-gradient(circle at center, rgba(139, 92, 246, 0.1) 0%, rgba(67, 56, 202, 0.05) 70%)"
-                    : "none",
-                }}
+                className="bg-gradient-to-b from-[#0A0A0F] to-[#141419] rounded-xl p-6 mb-6 border border-purple-500/20 relative overflow-hidden"
               >
-                {/* Radial rays background */}
-                <div
-                  className="absolute inset-0 opacity-20"
-                  style={{
-                    background:
-                      "repeating-conic-gradient(from 0deg, rgba(139, 92, 246, 0.1) 0deg 15deg, rgba(67, 56, 202, 0.1) 15deg 30deg)",
-                    backgroundSize: "100% 100%",
-                    backgroundPosition: "center",
-                  }}
-                />
-
-                <div className="flex items-center mb-6 relative z-10">
-                  <div className="h-16 w-16 rounded-full bg-gradient-to-br from-purple-600 to-blue-700 flex items-center justify-center text-xl font-bold mr-4 border-2 border-purple-400/50 shadow-lg">
-                    HK
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-2xl uppercase">{currentUser.name}</h4>
-                    <p className="text-md text-gray-300">{currentUser.handle}</p>
+                {/* Header with date */}
+                <div className="flex justify-between items-center mb-6">
+                  <div className="text-lg text-gray-400">
+                    {currentUser.lastUpdated} <span className="text-sm">(updated every Sunday)</span>
                   </div>
                 </div>
 
-                <div className="text-2xl font-bold uppercase mb-6 text-center relative z-10">
-                  YAP EARLY, YAP ONLY, YAP OFTEN.
-                </div>
-
-                <div className="text-lg mb-6 text-center relative z-10">
-                  @_KAITOAI IS CONNECTING AI, ATTENTION, <br />
-                  AND CAPITAL, WITH YAPS.
-                </div>
-
-                <div className="text-xl font-bold mb-8 text-center relative z-10">PROUD TO BECOME A YAPPER TODAY!</div>
-
-                <div className="grid grid-cols-2 gap-4 mb-6 relative z-10">
-                  <div className="bg-black/60 backdrop-blur-sm rounded-lg p-4 border border-purple-500/30">
-                    <h5 className="text-purple-300 font-medium mb-2">Score Summary</h5>
-                    <div className="space-y-2">
-                      <div className="flex justify-between items-center">
-                        <span>Twitter Score:</span>
-                        <span className="font-bold">{currentUser.twitterScore}</span>
+                {/* Main content grid */}
+                <div className="grid grid-cols-2 gap-6">
+                  {/* Left column - User info and stats */}
+                  <div className="space-y-6">
+                    {/* User profile */}
+                    <div className="flex items-center">
+                      <div className="h-16 w-16 rounded-full bg-gradient-to-br from-purple-600 to-blue-700 flex items-center justify-center text-xl font-bold border-2 border-purple-400/30">
+                        HK
                       </div>
-                      <div className="flex justify-between items-center">
-                        <span>Telegram Score:</span>
-                        <span className="font-bold">{currentUser.telegramScore}</span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span>Wallet Score:</span>
-                        <span className="font-bold">{currentUser.walletScore}</span>
-                      </div>
-                      <div className="h-px w-full bg-purple-600/30 my-2"></div>
-                      <div className="flex justify-between items-center">
-                        <span className="font-bold">Total Score:</span>
-                        <span className="font-bold text-xl">{currentUser.totalScore}</span>
+                      <div className="ml-4">
+                        <h2 className="text-2xl font-bold">{currentUser.name}</h2>
+                        <div className="flex items-center">
+                          <span className="text-gray-400">{currentUser.handle}</span>
+                          <span className="mx-2 text-gray-500">•</span>
+                          <span className="text-blue-400 font-medium">Diamond Holder</span>
+                        </div>
+                        <div className="mt-1 text-purple-400 font-bold">Rank #{currentUser.rank}</div>
                       </div>
                     </div>
-                  </div>
 
-                  <div className="bg-black/60 backdrop-blur-sm rounded-lg p-4 border border-purple-500/30">
-                    <h5 className="text-purple-300 font-medium mb-2">Badge Collection</h5>
-                    <div className="space-y-2">
-                      <div className="flex justify-between items-center">
-                        <span>Total Badges:</span>
-                        <span className="font-bold">{userBadges.length}</span>
+                    {/* Score Summary */}
+                    <div className="bg-black/40 rounded-xl p-4 border border-purple-500/20">
+                      <h4 className="text-lg font-medium mb-3">Score Summary</h4>
+                      <div className="space-y-3">
+                        <div className="flex justify-between items-center">
+                          <span className="text-gray-300">Twitter Score:</span>
+                          <span className="text-xl font-bold">{currentUser.twitterScore}</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-gray-300">Telegram Score:</span>
+                          <span className="text-xl font-bold">{currentUser.telegramScore}</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-gray-300">Wallet Score:</span>
+                          <span className="text-xl font-bold">{currentUser.walletScore}</span>
+                        </div>
+                        <div className="h-px w-full bg-purple-600/20 my-2"></div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-lg font-bold">Total Score:</span>
+                          <span className="text-2xl font-bold text-purple-400">{currentUser.totalScore}</span>
+                        </div>
                       </div>
-                      <div className="flex justify-between items-center">
-                        <span>Best Badge:</span>
-                        <span className="font-bold text-blue-400">Diamond Hodler</span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span>Latest Badge:</span>
-                        <span className="font-bold text-purple-400">Community Guardian</span>
-                      </div>
-                      <div className="h-px w-full bg-purple-600/30 my-2"></div>
-                      <div className="flex items-center justify-center">
-                        <div className="flex -space-x-2">
-                          {userBadges.slice(0, 3).map((badge, index) => (
-                            <div
-                              key={badge.id}
-                              className={`bg-purple-900/30 p-1 rounded-full border border-purple-500/30`}
-                            >
-                              <badge.icon className={`h-4 w-4 ${badge.color}`} />
+                    </div>
+
+                    {/* Badge Collection */}
+                    <div className="bg-black/40 rounded-xl p-4 border border-purple-500/20">
+                      <h4 className="text-lg font-medium mb-3">Badge Collection</h4>
+                      <div className="space-y-3">
+                        <div className="flex justify-between items-center">
+                          <span className="text-gray-300">Total Badges:</span>
+                          <span className="text-xl font-bold">{userBadges.length}</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-gray-300">Latest Badge:</span>
+                          <span className="text-xl font-bold text-purple-400">Community Guardian</span>
+                        </div>
+                        <div className="h-px w-full bg-purple-600/20 my-2"></div>
+                        <div className="flex items-center justify-center gap-3">
+                          {userBadges.slice(0, 5).map((badge, index) => (
+                            <div key={badge.id} className="bg-black/60 p-2 rounded-full border border-purple-500/20">
+                              <badge.icon className={`h-6 w-6 ${badge.color}`} />
                             </div>
                           ))}
-                          {userBadges.length > 3 && (
-                            <div className="bg-purple-900/30 p-1 rounded-full border border-purple-500/30 flex items-center justify-center z-0 w-6 h-6">
-                              <span className="text-xs font-bold">+{userBadges.length - 3}</span>
-                            </div>
-                          )}
                         </div>
                       </div>
                     </div>
                   </div>
+
+                  {/* Right column - Enhanced Network visualization */}
+                  <div className="relative">
+                    <canvas
+                      ref={networkCanvasRef}
+                      className="w-full h-[400px] rounded-xl bg-black/20 border border-purple-500/20"
+                    ></canvas>
+                  </div>
                 </div>
 
-                <div className="flex items-center justify-between relative z-10">
+                {/* Footer */}
+                <div className="flex items-center justify-between mt-6">
                   <div className="flex items-center">
-                    <div className="h-8 w-8 mr-2">
-                      <svg
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="text-purple-400"
-                      >
-                        <path
-                          d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"
-                          fill="currentColor"
-                        />
-                      </svg>
-                    </div>
-                    <span className="text-sm text-gray-300">cluster.protocol</span>
+                    <svg className="h-5 w-5 text-purple-400 mr-2" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
+                    </svg>
+                    <span className="text-gray-400">cluster.protocol</span>
                   </div>
-                  <div className="text-sm text-gray-300">Rank #{currentUser.rank}</div>
+                  <div className="text-gray-400">yaps.cluster.ai</div>
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              {/* Action Buttons */}
+              <div className="grid grid-cols-2 gap-4">
                 <button
-                  className="bg-black/30 hover:bg-purple-900/40 text-white px-3 py-2 rounded-md flex items-center justify-center transition-colors border border-purple-500/20 relative group"
+                  className="bg-black/40 hover:bg-purple-900/40 text-white px-4 py-3 rounded-xl flex items-center justify-center transition-colors border border-purple-500/20 text-lg font-medium"
                   onClick={copyScoreCardLink}
                 >
-                  <Link className="h-4 w-4 mr-2" />
+                  <Link className="h-5 w-5 mr-3" />
                   {scoreCardCopyStatus.link === "copied" ? "Link Copied!" : "Copy Link"}
-                  <span className="absolute -top-8 left-1/2 -translate-x-1/2 bg-black/30 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
-                    {scoreCardCopyStatus.link === "copied" ? "Link copied!" : "Copy link to clipboard"}
-                  </span>
                 </button>
                 <button
-                  className="bg-black/30 hover:bg-purple-900/40 text-white px-3 py-2 rounded-md flex items-center justify-center transition-colors border border-purple-500/20 relative group"
+                  className="bg-black/40 hover:bg-purple-900/40 text-white px-4 py-3 rounded-xl flex items-center justify-center transition-colors border border-purple-500/20 text-lg font-medium"
                   onClick={copyScoreCardImage}
                 >
-                  <Image className="h-4 w-4 mr-2" />
+                  <Image className="h-5 w-5 mr-3" />
                   {scoreCardCopyStatus.image === "copied"
                     ? "Image Copied!"
                     : scoreCardCopyStatus.image === "processing"
                       ? "Processing..."
                       : "Copy Image"}
-                  <span className="absolute -top-8 left-1/2 -translate-x-1/2 bg-black/30 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
-                    {scoreCardCopyStatus.image === "copied" ? "Image copied!" : "Copy image to clipboard"}
-                  </span>
                 </button>
                 <a
                   href={`https://twitter.com/intent/tweet?text=Check%20out%20my%20Cluster%20Protocol%20score%20card!%20Total%20Score:%20${currentUser.totalScore}&url=https://cluster.protocol/scorecard/${currentUser.handle}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="bg-[#1DA1F2] hover:bg-[#1a94e0] text-white px-3 py-2 rounded-md flex items-center justify-center transition-colors"
+                  className="bg-[#1DA1F2] hover:bg-[#1a94e0] text-white px-4 py-3 rounded-xl flex items-center justify-center transition-colors text-lg font-medium"
                 >
-                  <Twitter className="h-4 w-4 mr-2" />
+                  <Twitter className="h-5 w-5 mr-3" />
                   Share on Twitter
                 </a>
                 <button
-                  className="bg-black/30 hover:bg-purple-900/40 text-white px-3 py-2 rounded-md flex items-center justify-center transition-colors border border-purple-500/20 relative group"
+                  className="bg-black/40 hover:bg-purple-900/40 text-white px-4 py-3 rounded-xl flex items-center justify-center transition-colors border border-purple-500/20 text-lg font-medium"
                   onClick={downloadScoreCard}
                 >
-                  <Download className="h-4 w-4 mr-2" />
+                  <Download className="h-5 w-5 mr-3" />
                   Download Card
-                  <span className="absolute -top-8 left-1/2 -translate-x-1/2 bg-black/30 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
-                    Download as PNG image
-                  </span>
                 </button>
               </div>
             </div>
